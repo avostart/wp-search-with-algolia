@@ -214,6 +214,7 @@ final class Algolia_Searchable_Posts_Index extends Algolia_Index {
 		$shared_attributes['images'] = Algolia_Utils::get_post_images( $post->ID );
 
 		$shared_attributes['permalink']      = get_permalink( $post );
+		$shared_attributes['slug']      = $post->post_name;
 		$shared_attributes['post_mime_type'] = $post->post_mime_type;
 
 		// Push all taxonomies by default, including custom ones.
