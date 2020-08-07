@@ -233,7 +233,12 @@ final class Algolia_Searchable_Posts_Index extends Algolia_Index {
 				}
 			}
 
-			$taxonomy_values = wp_list_pluck( $terms, 'name' );
+			//$taxonomy_values = wp_list_pluck( $terms, 'name' );
+			$taxonomy_values = [];
+			foreach ($terms as $term) {
+				$taxonomy_values[$term->slug] = $term->name;
+			}
+			
 			if ( ! empty( $taxonomy_values ) ) {
 				$shared_attributes['taxonomies'][ $taxonomy->name ] = $taxonomy_values;
 			}
