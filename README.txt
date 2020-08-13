@@ -1,5 +1,5 @@
 
-=== WP Search with Algolia ===
+=== WP Search with Algolia (fork Avostart) ===
 Contributors: WebDevStudios, williamsba1, gregrickaby, tw2113, richaber
 Tags: Search, Algolia, Autocomplete, instant-search, relevant search, search highlight, faceted search, find-as-you-type search, suggest, search by category, ajax search, better search, custom search
 Requires at least: 5.0
