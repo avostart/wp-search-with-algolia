@@ -1,7 +1,7 @@
 {
-  "name": "wp-search-with-algolia",
+  "name": "avostart-wp-search-with-algolia",
   "version": "1.4.0",
-  "description": "Integrate the powerful Algolia search service with WordPress.",
+  "description": "Integrate the powerful Algolia search service with WordPress. FORKED VERSION.",
   "author": "WebDevStudios",
   "license": "GPL-3.0",
   "keywords": [
