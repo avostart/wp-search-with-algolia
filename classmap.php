@@ -17,6 +17,10 @@ if ( apply_filters( 'algolia_should_require_search_client', true ) ) {
 	require_once ALGOLIA_PATH . 'includes/libraries/algoliasearch-client-php/autoload.php';
 }
 
+require_once ALGOLIA_PATH . 'includes/factories/class-algolia-http-client-interface-factory.php';
+require_once ALGOLIA_PATH . 'includes/factories/class-algolia-search-client-factory.php';
+require_once ALGOLIA_PATH . 'includes/factories/class-algolia-plugin-factory.php';
+
 require_once ALGOLIA_PATH . 'includes/class-algolia-api.php';
 require_once ALGOLIA_PATH . 'includes/class-algolia-autocomplete-config.php';
 require_once ALGOLIA_PATH . 'includes/class-algolia-compatibility.php';
@@ -25,6 +29,8 @@ require_once ALGOLIA_PATH . 'includes/class-algolia-search.php';
 require_once ALGOLIA_PATH . 'includes/class-algolia-settings.php';
 require_once ALGOLIA_PATH . 'includes/class-algolia-template-loader.php';
 require_once ALGOLIA_PATH . 'includes/class-algolia-utils.php';
+require_once ALGOLIA_PATH . 'includes/class-algolia-styles.php';
+require_once ALGOLIA_PATH . 'includes/class-algolia-scripts.php';
 
 require_once ALGOLIA_PATH . 'includes/indices/class-algolia-index.php';
 require_once ALGOLIA_PATH . 'includes/indices/class-algolia-index-replica.php';

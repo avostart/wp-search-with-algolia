@@ -18,16 +18,6 @@ class Algolia_Plugin {
 	const NAME = 'algolia';
 
 	/**
-	 * Singleton instance of the Algolia_Plugin.
-	 *
-	 * @author WebDevStudios <contact@webdevstudios.com>
-	 * @since  1.0.0
-	 *
-	 * @var Algolia_Plugin
-	 */
-	private static $instance;
-
-	/**
 	 * Instance of Algolia_API.
 	 *
 	 * @author WebDevStudios <contact@webdevstudios.com>
@@ -78,6 +68,26 @@ class Algolia_Plugin {
 	private $changes_watchers;
 
 	/**
+	 * Instance of Algolia_Styles.
+	 *
+	 * @author WebDevStudios <contact@webdevstudios.com>
+	 * @since  1.5.0
+	 *
+	 * @var Algolia_Styles
+	 */
+	private $styles;
+
+	/**
+	 * Instance of Algolia_Scripts.
+	 *
+	 * @author WebDevStudios <contact@webdevstudios.com>
+	 * @since  1.5.0
+	 *
+	 * @var Algolia_Scripts
+	 */
+	private $scripts;
+
+	/**
 	 * Instance of Algolia_Template_Loader.
 	 *
 	 * @author WebDevStudios <contact@webdevstudios.com>
@@ -100,17 +110,16 @@ class Algolia_Plugin {
 	/**
 	 * Get the singleton instance of Algolia_Plugin.
 	 *
-	 * @author WebDevStudios <contact@webdevstudios.com>
-	 * @since  1.0.0
+	 * @author     WebDevStudios <contact@webdevstudios.com>
+	 * @since      1.0.0
+	 * @deprecated 1.6.0 Use Algolia_Plugin_Factory::create()
+	 * @see        Algolia_Plugin_Factory::create()
 	 *
 	 * @return Algolia_Plugin
 	 */
 	public static function get_instance() {
-		if ( null === self::$instance ) {
-			self::$instance = new Algolia_Plugin();
-		}
-
-		return self::$instance;
+		_deprecated_function( __METHOD__, '1.6.0', 'Algolia_Plugin_Factory::create();' );
+		return Algolia_Plugin_Factory::create();
 	}
 
 	/**
@@ -119,17 +128,12 @@ class Algolia_Plugin {
 	 * @author WebDevStudios <contact@webdevstudios.com>
 	 * @since  1.0.0
 	 */
-	private function __construct() {
-		// Register the assets so that they can be used in other plugins outside of the context of the core features.
-		add_action( 'wp_enqueue_scripts', array( $this, 'register_assets' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'register_assets' ) );
-
-		$this->settings = new Algolia_Settings();
-
-		$this->api = new Algolia_API( $this->settings );
-
+	public function __construct() {
+		$this->settings      = new Algolia_Settings();
+		$this->api           = new Algolia_API( $this->settings );
 		$this->compatibility = new Algolia_Compatibility();
-
+		$this->styles        = new Algolia_Styles();
+		$this->scripts       = new Algolia_Scripts();
 		add_action( 'init', array( $this, 'load' ), 20 );
 	}
 
@@ -240,87 +244,6 @@ class Algolia_Plugin {
 	 */
 	public function get_autocomplete_config() {
 		return $this->autocomplete_config;
-	}
-
-	/**
-	 * Register scripts and styles.
-	 *
-	 * @author WebDevStudios <contact@webdevstudios.com>
-	 * @since  1.0.0
-	 */
-	public function register_assets() {
-
-		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-
-		/**
-		 * Filters the `$in_footer` argument to `wp_register_script()` for Algolia Scripts.
-		 *
-		 * @since  1.3.0
-		 *
-		 * @param bool $in_footer Whether to enqueue the script before </body> instead of in the <head>. Default 'false'.
-		 */
-		$in_footer = (bool) apply_filters( 'algolia_load_scripts_in_footer', false );
-
-		// CSS.
-		wp_register_style(
-			'algolia-autocomplete',
-			ALGOLIA_PLUGIN_URL . 'css/algolia-autocomplete.css',
-			[],
-			ALGOLIA_VERSION,
-			'screen'
-		);
-		wp_register_style(
-			'algolia-instantsearch',
-			ALGOLIA_PLUGIN_URL . 'css/algolia-instantsearch.css',
-			[],
-			ALGOLIA_VERSION,
-			'screen'
-		);
-
-		// JS.
-		wp_register_script(
-			'algolia-search',
-			ALGOLIA_PLUGIN_URL . 'js/algoliasearch/dist/algoliasearch.jquery' . $suffix . '.js',
-			[
-				'jquery',
-				'underscore',
-				'wp-util',
-			],
-			ALGOLIA_VERSION,
-			$in_footer
-		);
-		wp_register_script(
-			'algolia-autocomplete',
-			ALGOLIA_PLUGIN_URL . 'js/autocomplete.js/dist/autocomplete' . $suffix . '.js',
-			[
-				'jquery',
-				'underscore',
-				'wp-util',
-			],
-			ALGOLIA_VERSION,
-			$in_footer
-		);
-		wp_register_script(
-			'algolia-autocomplete-noconflict',
-			ALGOLIA_PLUGIN_URL . 'js/autocomplete-noconflict.js',
-			[
-				'algolia-autocomplete',
-			],
-			ALGOLIA_VERSION,
-			$in_footer
-		);
-
-		wp_register_script(
-			'algolia-instantsearch',
-			ALGOLIA_PLUGIN_URL . 'js/instantsearch.js/dist/instantsearch-preact' . $suffix . '.js',
-			[
-				'jquery',
-				'underscore',
-				'wp-util',
-			],
-			ALGOLIA_VERSION,
-			$in_footer
-		);
 	}
 
 	/**
@@ -490,5 +413,29 @@ class Algolia_Plugin {
 	 */
 	public function get_template_loader() {
 		return $this->template_loader;
+	}
+
+	/**
+	 * Get the Algolia_Styles.
+	 *
+	 * @author WebDevStudios <contact@webdevstudios.com>
+	 * @since  1.5.0
+	 *
+	 * @return Algolia_Styles
+	 */
+	public function get_styles() {
+		return $this->styles;
+	}
+
+	/**
+	 * Get the Algolia_Scripts.
+	 *
+	 * @author WebDevStudios <contact@webdevstudios.com>
+	 * @since  1.5.0
+	 *
+	 * @return Algolia_Scripts
+	 */
+	public function get_scripts() {
+		return $this->scripts;
 	}
 }
